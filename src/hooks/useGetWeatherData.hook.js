@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import { useLocationContext } from 'context/location/location.provider';
 import { useEffect, useState } from 'react';
-import { dataWeatherMock } from 'api';
+import { dataWeatherMock } from 'api/api';
 
 const useGetWeatherData = () => {
   const [data, setData] = useState();

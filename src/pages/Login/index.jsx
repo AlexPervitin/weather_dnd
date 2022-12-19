@@ -1,4 +1,6 @@
+import { emailValidate } from 'constants/constants';
 import { useAuthContext } from 'context/auth/auth.provider';
+import useGetValidateLvls from 'hooks/useGetValidateLvls.hook';
 import { useState } from 'react';
 import {
   Label,
@@ -22,22 +24,10 @@ function Login() {
   const { login } = useAuthContext();
 
   const { isLower, isUpper, isNumber, isSpecialChar, isFrom8to42Char } =
-    (() => {
-      return {
-        isLower: /[a-z]/g.test(password),
-        isUpper: /[A-Z]/g.test(password),
-        isNumber: /[0-9]/g.test(password),
-        isSpecialChar: /[-+_!@#$%^&*.,?]/g.test(password),
-        isFrom8to42Char: password.length >= 8 && password.length <= 42,
-      };
-    })();
+    useGetValidateLvls(password);
 
   const validateEmail = (() => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
+    return String(email).toLowerCase().match(emailValidate);
   })();
 
   const protectionLength = [
@@ -63,13 +53,25 @@ function Login() {
   const isValid =
     protectionLength >= 1 && protectionLength < 5 ? 'Password not valid' : '';
 
+  const handleChangeEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleLogin = () => {
+    login(email, password);
+  };
+
   return (
     <WrapperLogin>
       <Label>Email</Label>
       <TextField
         type="email"
         placeholder="Enter your email"
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={handleChangeEmail}
       />
       <Label>Password</Label>
       <PasswordBlock>
@@ -78,7 +80,7 @@ function Login() {
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           placeholder="Must have 8-42 characters"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChangePassword}
         />
         <ProtectionLevelWrapper>
           <ProtectionLevel
@@ -117,7 +119,7 @@ function Login() {
       </ValidateWrapper>
       <LoginButton
         disabled={!validateEmail || protectionLength < 5}
-        onClick={() => login(email, password)}
+        onClick={handleLogin}
       >
         Sign UP
       </LoginButton>

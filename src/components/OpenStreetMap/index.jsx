@@ -2,7 +2,7 @@ import React from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useLocationContext } from 'context/location/location.provider';
-import useGetGeoLocation from 'hooks/useGetGeoLocation';
+import useGetGeoLocation from 'hooks/useGetGeoLocation.hook';
 import LocationMarker from './LocationMarker';
 
 export default function OpenStreetMap({ cityName }) {

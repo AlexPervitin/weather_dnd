@@ -1,6 +1,17 @@
 import { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { Tooltip } from './styles';
+import {
+  ActionButton,
+  ActionRowBlock,
+  ChangeRowTextInput,
+  DnDItemWrapper,
+  MenuItem,
+  RowBlock,
+  RowInner,
+  RowText,
+  RowWrapper,
+  Tooltip,
+} from './styles';
 
 export default function DnDItem({ items, dropId, setCount }) {
   const [openTooltip, setOpenTooltip] = useState(false);
@@ -21,7 +32,7 @@ export default function DnDItem({ items, dropId, setCount }) {
     items.splice(endIndex, 0, removed);
   };
 
-  function handleAddChildren({ elem, text }) {
+  const handleAddChildren = ({ elem, text }) => {
     elem?.children?.push({
       id: Date.now(),
       text,
@@ -30,16 +41,16 @@ export default function DnDItem({ items, dropId, setCount }) {
     setOpenTooltip((prev) => !prev);
     setItemText('');
     setCount((prev) => prev + 1);
-  }
+  };
 
-  function removeObjectWithId(arr, id) {
+  const removeObjectWithId = (arr, id) => {
     const index = arr.findIndex((item) => item.id === id);
     arr.splice(index, 1);
     setCount((prev) => prev + 1);
     setOpenTooltip(false);
-  }
+  };
 
-  function editObjectWithId(arr, id) {
+  const editObjectWithId = (arr, id) => {
     setCount((prev) => prev + 1);
     setOpenTooltip(false);
     setItemText('');
@@ -51,10 +62,14 @@ export default function DnDItem({ items, dropId, setCount }) {
         editObjectWithId(element.children, id);
       }
     });
-  }
+  };
+
+  const handleChangeText = (e) => {
+    setItemText(e.target.value);
+  };
 
   return (
-    <div style={{ width: '100%' }}>
+    <DnDItemWrapper>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId={dropId}>
           {(provided) => (
@@ -68,45 +83,21 @@ export default function DnDItem({ items, dropId, setCount }) {
                   >
                     {(provided) => (
                       <div ref={provided.innerRef} {...provided.draggableProps}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            fontWeight: 800,
-                            fontSize: '28px',
-                          }}
-                        >
+                        <RowWrapper>
                           <div {...provided.dragHandleProps}>::</div>
-                          <div
-                            style={{
-                              background: '#fff',
-                              margin: '8px',
-                              padding: '8px',
-                              width: '90%',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              border: '1px solid black',
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                position: 'relative',
-                              }}
-                            >
-                              <div style={{ width: '100%' }}>{elem.text}</div>
-                              <div
+                          <RowBlock>
+                            <RowInner>
+                              <RowText>{elem.text}</RowText>
+                              <MenuItem
                                 onClick={() =>
                                   setOpenTooltip({
                                     index,
                                     condition: !openTooltip.condition,
                                   })
                                 }
-                                style={{ cursor: 'pointer' }}
                               >
                                 :::
-                              </div>
+                              </MenuItem>
                               <Tooltip
                                 initial={{ opacity: 0 }}
                                 animate={{
@@ -122,26 +113,14 @@ export default function DnDItem({ items, dropId, setCount }) {
                                       : 0,
                                 }}
                               >
-                                <input
+                                <ChangeRowTextInput
                                   name="itemText"
-                                  style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    minHeight: '40px',
-                                    marginBottom: '10px',
-                                  }}
                                   value={itemText}
-                                  onChange={(e) => setItemText(e.target.value)}
+                                  onChange={handleChangeText}
                                 />
-                                <div
-                                  style={{
-                                    width: '100%',
-                                    display: 'flex',
-                                    justifyContent: 'space-around',
-                                    height: '40px',
-                                  }}
-                                >
-                                  <button
+                                <ActionRowBlock>
+                                  <ActionButton
+                                    disabled={!itemText}
                                     onClick={() => {
                                       handleAddChildren({
                                         elem,
@@ -150,24 +129,25 @@ export default function DnDItem({ items, dropId, setCount }) {
                                     }}
                                   >
                                     Add children row
-                                  </button>
-                                  <button
+                                  </ActionButton>
+                                  <ActionButton
+                                    disabled={!itemText}
                                     onClick={() => {
                                       editObjectWithId(items, elem.id);
                                     }}
                                   >
-                                    Edit
-                                  </button>
-                                  <button
+                                    Edit current row
+                                  </ActionButton>
+                                  <ActionButton
                                     onClick={() => {
                                       removeObjectWithId(items, elem.id);
                                     }}
                                   >
-                                    Delete
-                                  </button>
-                                </div>
+                                    Delete current row
+                                  </ActionButton>
+                                </ActionRowBlock>
                               </Tooltip>
-                            </div>
+                            </RowInner>
                             {elem?.children?.length > 0 && (
                               <DnDItem
                                 items={elem?.children}
@@ -176,8 +156,8 @@ export default function DnDItem({ items, dropId, setCount }) {
                                 setCount={setCount}
                               />
                             )}
-                          </div>
-                        </div>
+                          </RowBlock>
+                        </RowWrapper>
                       </div>
                     )}
                   </Draggable>
@@ -188,6 +168,6 @@ export default function DnDItem({ items, dropId, setCount }) {
           )}
         </Droppable>
       </DragDropContext>
-    </div>
+    </DnDItemWrapper>
   );
 }

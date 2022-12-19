@@ -6,6 +6,7 @@ export const WeatherWrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  padding: 25px;
 `;
 
 export const WeatherTitle = styled.div`

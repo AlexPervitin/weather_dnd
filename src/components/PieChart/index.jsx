@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { useCallback } from 'react';
 import { Pie } from '@visx/shape';
 import { Group } from '@visx/group';
