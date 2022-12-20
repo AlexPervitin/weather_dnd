@@ -22,67 +22,67 @@ const useGetWeatherData = () => {
     },
   };
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   axios
-  //     .request(options)
-  //     .then((response) => {
-  //       setData(response?.data);
-  //     })
-  //     .catch((err) => {
-  //       setError(err?.response?.data?.message);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }, [position.coordinates]);
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .request(options)
+      .then((response) => {
+        setData(response?.data);
+      })
+      .catch((err) => {
+        setError(err?.response?.data?.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [position.coordinates]);
 
-  // // axios data
+  // axios data
 
-  // const minMaxTempData = data?.data?.map((day) => {
-  //   return {
-  //     date: day.datetime,
-  //     tempMin: day.app_min_temp,
-  //     tempMax: day.app_max_temp,
-  //   };
-  // });
-  // const windSpeed = data?.data?.map((day) => {
-  //   return {
-  //     date: day.datetime,
-  //     speed: day.wind_spd,
-  //   };
-  // });
-  // const windDirectory = data?.data?.map((day) => {
-  //   return {
-  //     date: day.datetime,
-  //     dir: day.wind_cdir,
-  //   };
-  // });
-  // const cityName = data?.city_name;
-
-  // mock data, when requests is over
-  const minMaxTempData = dataWeatherMock[0].data.map((day) => {
+  const minMaxTempData = data?.data?.map((day) => {
     return {
       date: day.datetime,
       tempMin: day.app_min_temp,
       tempMax: day.app_max_temp,
     };
   });
-  const windSpeed = dataWeatherMock[0].data.map((day) => {
+  const windSpeed = data?.data?.map((day) => {
     return {
       date: day.datetime,
       speed: day.wind_spd,
     };
   });
-
-  const windDirectory = dataWeatherMock[0].data.map((day) => {
+  const windDirectory = data?.data?.map((day) => {
     return {
       date: day.datetime,
       dir: day.wind_cdir,
     };
   });
+  const cityName = data?.city_name;
 
-  const cityName = dataWeatherMock[0].city_name;
+  // mock data, when requests is over
+  // const minMaxTempData = dataWeatherMock[0].data.map((day) => {
+  //   return {
+  //     date: day.datetime,
+  //     tempMin: day.app_min_temp,
+  //     tempMax: day.app_max_temp,
+  //   };
+  // });
+  // const windSpeed = dataWeatherMock[0].data.map((day) => {
+  //   return {
+  //     date: day.datetime,
+  //     speed: day.wind_spd,
+  //   };
+  // });
+
+  // const windDirectory = dataWeatherMock[0].data.map((day) => {
+  //   return {
+  //     date: day.datetime,
+  //     dir: day.wind_cdir,
+  //   };
+  // });
+
+  // const cityName = dataWeatherMock[0].city_name;
 
   return {
     data,
