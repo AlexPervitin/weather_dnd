@@ -22,3 +22,9 @@ export const WeatherChartsContainer = styled.div`
   width: 100%;
   height: 100%;
 `;
+
+export const ErrorText = styled.div`
+  color: red;
+  font-size: 24px;
+  text-align: center;
+`;

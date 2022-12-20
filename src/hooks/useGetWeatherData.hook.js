@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import { useLocationContext } from 'context/location/location.provider';
 import { useEffect, useState } from 'react';
@@ -7,6 +8,7 @@ const useGetWeatherData = () => {
   const [data, setData] = useState();
   const [error, setError] = useState();
   const { position } = useLocationContext();
+  const [loading, setLoading] = useState(false);
   const options = {
     method: 'GET',
     url: 'https://weatherbit-v1-mashape.p.rapidapi.com/forecast/daily',
@@ -20,18 +22,23 @@ const useGetWeatherData = () => {
     },
   };
 
-  useEffect(() => {
-    axios
-      .request(options)
-      .then((response) => {
-        setData(response?.data);
-      })
-      .catch((err) => {
-        setError(err?.response?.data?.message);
-      });
-  }, [position.coordinates]);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   axios
+  //     .request(options)
+  //     .then((response) => {
+  //       setData(response?.data);
+  //     })
+  //     .catch((err) => {
+  //       setError(err?.response?.data?.message);
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // }, [position.coordinates]);
 
-  // axios data
+  // // axios data
+
   // const minMaxTempData = data?.data?.map((day) => {
   //   return {
   //     date: day.datetime,
@@ -77,7 +84,15 @@ const useGetWeatherData = () => {
 
   const cityName = dataWeatherMock[0].city_name;
 
-  return { data, minMaxTempData, windSpeed, windDirectory, cityName, error };
+  return {
+    data,
+    minMaxTempData,
+    windSpeed,
+    windDirectory,
+    cityName,
+    error,
+    loading,
+  };
 };
 
 export default useGetWeatherData;

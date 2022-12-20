@@ -1,6 +1,6 @@
 export const dataWeatherMock = [
   {
-    city_name: 'Stanley',
+    city_name: 'Stanley (mock)',
     country_code: 'US',
     data: [
       {

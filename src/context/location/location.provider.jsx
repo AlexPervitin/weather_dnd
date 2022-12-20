@@ -3,7 +3,6 @@ import LocationContext from './location.context';
 
 function LocationProvider({ children }) {
   const [position, setPosition] = useState({
-    loaded: false,
     coordinates: { lat: 50.430848, lng: 30.45573 },
   });
   const value = useMemo(
