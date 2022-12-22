@@ -57,6 +57,18 @@ export default function PieChart({
   margin = defaultMargin,
   data,
 }) {
+  const sortedData = letters
+    .filter((elem) => {
+      return data?.map((item) => item.dir).indexOf(elem.letter) > -1;
+    })
+    .map((elem, _index, arr) => {
+      const count = data?.filter((item) => item.dir === elem.letter).length;
+      if (arr?.length) {
+        elem.frequency = (1 / arr?.length) * count;
+      }
+      return elem;
+    });
+
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
   const radius = Math.min(innerWidth, innerHeight) / 2;
@@ -98,7 +110,7 @@ export default function PieChart({
       <svg width={width} height={height}>
         <Group top={top} left={left}>
           <Pie
-            data={letters}
+            data={sortedData}
             pieValue={frequency}
             pieSortValues={pieSortValues}
             outerRadius={radius}
@@ -152,8 +164,12 @@ export default function PieChart({
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {data
               .filter((day) => day.dir === tooltipData.letter)
-              .map((item) => {
-                return <div>{format(new Date(item.date), 'dd MMMM yyyy')}</div>;
+              .map((item, index) => {
+                return (
+                  <div key={index}>
+                    {format(new Date(item.date), 'dd MMMM yyyy')}
+                  </div>
+                );
               })}
           </div>
         </Tooltip>

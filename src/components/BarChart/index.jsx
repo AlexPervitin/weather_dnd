@@ -60,7 +60,7 @@ function BarChart(props) {
         round: true,
         domain: [0, Math.max(...data.map(getSpeed))],
       }),
-    [innerHeight],
+    [innerHeight, data],
   );
 
   const onMouseLeave = useCallback(() => {
