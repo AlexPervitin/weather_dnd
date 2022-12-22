@@ -37,6 +37,8 @@ export const LoginButton = styled.button`
   max-width: 400px;
   max-height: 40px;
   margin-top: 30px;
+  cursor: pointer;
+  user-select: none;
 `;
 
 export const Tooltip = styled(motion.div)`
@@ -44,7 +46,6 @@ export const Tooltip = styled(motion.div)`
   position: absolute;
   width: fit-content;
   border: 0.5px solid grey;
-  z-index: 1;
   background: #fff;
   padding: 15px;
 `;
@@ -62,6 +63,17 @@ export const TestStr = styled.div`
 
 export const ValidMessage = styled.div`
   width: 100%;
+  color: red;
+`;
+
+export const ValidEmailMessage = styled.div`
+  width: 400px;
+  color: red;
+  margin-top: -20px;
+`;
+
+export const ValidSubmitMessage = styled.div`
+  width: 400px;
   color: red;
 `;
 

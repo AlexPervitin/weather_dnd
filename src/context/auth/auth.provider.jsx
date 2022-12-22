@@ -6,6 +6,8 @@ import AuthContext from 'context/auth/auth.context';
 function AuthProvider({ children }) {
   const navigate = useNavigate();
   const isAuth = localStorage.getItem('TOKEN');
+  const myEmail = 'email@gmail.com';
+  const myPassword = 'Password1!';
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('TOKEN');
@@ -14,7 +16,7 @@ function AuthProvider({ children }) {
 
   const handleLogin = useCallback(
     (email, password) => {
-      if (email === 'email@gmail.com' && password === 'Password1!') {
+      if (email === myEmail && password === myPassword) {
         localStorage.setItem('TOKEN', 'tokken');
         navigate(PATHS.weather);
       }
@@ -25,6 +27,8 @@ function AuthProvider({ children }) {
   const authData = useMemo(
     () => ({
       isAuth,
+      myEmail,
+      myPassword,
       logout: handleLogout,
       login: handleLogin,
     }),

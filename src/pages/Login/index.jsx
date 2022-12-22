@@ -13,7 +13,9 @@ import {
   TextField,
   Tooltip,
   ValidateWrapper,
+  ValidEmailMessage,
   ValidMessage,
+  ValidSubmitMessage,
   WrapperLogin,
 } from './styles';
 
@@ -21,7 +23,8 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [focus, setFocus] = useState(false);
-  const { login } = useAuthContext();
+  const [wasSubmit, setWasSubmit] = useState(false);
+  const { login, myEmail, myPassword } = useAuthContext();
 
   const { isLower, isUpper, isNumber, isSpecialChar, isFrom8to42Char } =
     useGetValidateLvls(password);
@@ -29,6 +32,14 @@ function Login() {
   const validateEmail = (() => {
     return String(email).toLowerCase().match(emailValidate);
   })();
+
+  const emailValidMessage =
+    !validateEmail && email.length > 0 && 'Email not valid';
+
+  const loginErrorMessage =
+    wasSubmit &&
+    (myEmail !== email || myPassword !== password) &&
+    'Email or Password is invalid';
 
   const protectionLength = [
     isLower,
@@ -63,6 +74,7 @@ function Login() {
 
   const handleLogin = () => {
     login(email, password);
+    setWasSubmit(true);
   };
 
   return (
@@ -73,6 +85,9 @@ function Login() {
         placeholder="Enter your email"
         onChange={handleChangeEmail}
       />
+      {emailValidMessage && (
+        <ValidEmailMessage>{emailValidMessage}</ValidEmailMessage>
+      )}
       <Label>Password</Label>
       <PasswordBlock>
         <TextField
@@ -101,7 +116,11 @@ function Login() {
         </ProtectionLevelWrapper>
         <Tooltip
           focus={focus}
-          animate={{ opacity: focus ? 1 : 0, scale: focus ? 1 : 1 }}
+          animate={{
+            visibility: focus ? 'visible' : 'hidden',
+            opacity: focus ? 1 : 0,
+            scale: focus ? 1 : 1,
+          }}
         >
           <div>Password requirements:</div>
           <TestStr isOk={isLower}>At least 1 lowercase latter</TestStr>
@@ -117,11 +136,14 @@ function Login() {
           {getProtectMessage()}
         </ProtectMessageBlock>
       </ValidateWrapper>
+      {loginErrorMessage && (
+        <ValidSubmitMessage>{loginErrorMessage}</ValidSubmitMessage>
+      )}
       <LoginButton
         disabled={!validateEmail || protectionLength < 5}
         onClick={handleLogin}
       >
-        Sign UP
+        Sign In
       </LoginButton>
     </WrapperLogin>
   );
