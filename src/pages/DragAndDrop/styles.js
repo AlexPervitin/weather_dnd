@@ -72,14 +72,15 @@ export const RowText = styled.div`
 
 export const MenuItem = styled.div`
   cursor: pointer;
+  margin-left: auto;
 `;
 
 export const ChangeRowTextInput = styled.input`
-  width: 100%;
+  width: 20%;
   height: 100%;
   min-height: 40px;
-  margin-bottom: 10px;
   border-radius: 8px;
+  margin-left: 15px;
 `;
 
 export const ActionRowBlock = styled.div`

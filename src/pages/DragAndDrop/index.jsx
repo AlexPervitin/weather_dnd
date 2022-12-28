@@ -1,47 +1,49 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import DnDItem from './DnDItem';
-import {
-  ActionButton,
-  AddNewRowBlock,
-  AddNewRowInput,
-  DndTitle,
-  DnDWrapper,
-} from './styles';
+import { ActionButton, AddNewRowBlock, DndTitle, DnDWrapper } from './styles';
 
 export default function DragAndDrop() {
-  const [items, setItems] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [count, setCount] = useState(0);
-  const [initItemText, setInitItemText] = useState('');
   const itemId = Date.now();
+  const { register, handleSubmit, setValue, watch, control } = useForm({
+    defaultValues: {
+      items: [],
+      first: '',
+      second: '',
+      third: '',
+    },
+  });
 
-  const handleChangeNewRowText = (e) => {
-    setInitItemText(e.target.value);
-  };
+  const items = watch('items');
 
   const handleAddNewRow = () => {
-    setItems((prev) => [
-      ...prev,
-      { id: itemId, text: initItemText, children: [] },
+    setValue('items', [
+      ...items,
+      { id: itemId, first: '', second: '', third: '', children: [] },
     ]);
-    setInitItemText('');
+  };
+
+  const onSubmit = (data) => {
+    console.info('submit', data.items);
   };
 
   return (
-    <DnDWrapper>
-      <DndTitle>Create your nested drag and drop table</DndTitle>
-      <AddNewRowBlock>
-        <AddNewRowInput
-          type="text"
-          name="initText"
-          onChange={handleChangeNewRowText}
-          value={initItemText}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <DnDWrapper>
+        <DndTitle>Create your nested drag and drop table</DndTitle>
+        <AddNewRowBlock>
+          <ActionButton onClick={handleAddNewRow}>Add new row</ActionButton>
+        </AddNewRowBlock>
+
+        <DnDItem
+          items={items}
+          dropId="parents"
+          register={register}
+          setValue={setValue}
+          control={control}
         />
-        <ActionButton onClick={handleAddNewRow} disabled={!initItemText}>
-          Add new row
-        </ActionButton>
-      </AddNewRowBlock>
-      <DnDItem items={items} dropId="parents" setCount={setCount} />
-    </DnDWrapper>
+
+        <ActionButton type="submit">Submit</ActionButton>
+      </DnDWrapper>
+    </form>
   );
 }

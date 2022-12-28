@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { Controller } from 'react-hook-form';
 import {
   ActionButton,
   ActionRowBlock,
@@ -8,64 +9,65 @@ import {
   MenuItem,
   RowBlock,
   RowInner,
-  RowText,
   RowWrapper,
   Tooltip,
 } from './styles';
 
-export default function DnDItem({ items, dropId, setCount }) {
+export default function DnDItem({
+  items,
+  dropId,
+  register,
+  setValue,
+  control,
+}) {
   const [openTooltip, setOpenTooltip] = useState(false);
-  const [itemText, setItemText] = useState('');
 
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
     }
-
     if (result.destination.index === result.source.index) {
       return;
     }
-
     const startIndex = result.source.index;
     const endIndex = result.destination.index;
     const [removed] = items.splice(startIndex, 1);
     items.splice(endIndex, 0, removed);
   };
 
-  const handleAddChildren = ({ elem, text }) => {
+  const handleAddChildren = (elem) => {
     elem?.children?.push({
       id: Date.now(),
-      text,
+      first: '',
+      second: '',
+      third: '',
       children: [],
     });
     setOpenTooltip((prev) => !prev);
-    setItemText('');
-    setCount((prev) => prev + 1);
   };
 
   const removeObjectWithId = (arr, id) => {
     const index = arr.findIndex((item) => item.id === id);
     arr.splice(index, 1);
-    setCount((prev) => prev + 1);
     setOpenTooltip(false);
   };
 
-  const editObjectWithId = (arr, id) => {
-    setCount((prev) => prev + 1);
-    setOpenTooltip(false);
-    setItemText('');
+  const editObjectWithId = (arr, id, value, name) => {
     arr.forEach((element, index, arr) => {
       if (element.id === id) {
-        arr[index] = { ...element, text: itemText };
+        arr[index] =
+          name === 'first'
+            ? { ...element, first: value }
+            : name === 'second'
+            ? { ...element, second: value }
+            : name === 'third'
+            ? { ...element, third: value }
+            : { ...element };
       }
       if (element.children) {
         editObjectWithId(element.children, id);
       }
     });
-  };
-
-  const handleChangeText = (e) => {
-    setItemText(e.target.value);
   };
 
   return (
@@ -87,7 +89,66 @@ export default function DnDItem({ items, dropId, setCount }) {
                           <div {...provided.dragHandleProps}>::</div>
                           <RowBlock>
                             <RowInner>
-                              <RowText>{elem.text}</RowText>
+                              <Controller
+                                control={control}
+                                name="first"
+                                render={({ field }) => (
+                                  <ChangeRowTextInput
+                                    {...field}
+                                    value={elem.value}
+                                    onChange={(e) => {
+                                      editObjectWithId(
+                                        items,
+                                        elem.id,
+                                        e.target.value,
+                                        field.name,
+                                      );
+                                      setValue('first', e.target.value);
+                                      field.onChange(e);
+                                    }}
+                                  />
+                                )}
+                              />
+                              <Controller
+                                control={control}
+                                name="second"
+                                render={({ field }) => (
+                                  <ChangeRowTextInput
+                                    {...field}
+                                    value={elem.value}
+                                    onChange={(e) => {
+                                      editObjectWithId(
+                                        items,
+                                        elem.id,
+                                        e.target.value,
+                                        field.name,
+                                      );
+                                      setValue('second', e.target.value);
+                                      field.onChange(e);
+                                    }}
+                                  />
+                                )}
+                              />
+                              <Controller
+                                control={control}
+                                name="third"
+                                render={({ field }) => (
+                                  <ChangeRowTextInput
+                                    {...field}
+                                    value={elem.value}
+                                    onChange={(e) => {
+                                      editObjectWithId(
+                                        items,
+                                        elem.id,
+                                        e.target.value,
+                                        field.name,
+                                      );
+                                      setValue('third', e.target.value);
+                                      field.onChange(e);
+                                    }}
+                                  />
+                                )}
+                              />
                               <MenuItem
                                 onClick={() =>
                                   setOpenTooltip({
@@ -113,30 +174,13 @@ export default function DnDItem({ items, dropId, setCount }) {
                                       : 0,
                                 }}
                               >
-                                <ChangeRowTextInput
-                                  name="itemText"
-                                  value={itemText}
-                                  onChange={handleChangeText}
-                                />
                                 <ActionRowBlock>
                                   <ActionButton
-                                    disabled={!itemText}
                                     onClick={() => {
-                                      handleAddChildren({
-                                        elem,
-                                        text: itemText,
-                                      });
+                                      handleAddChildren(elem);
                                     }}
                                   >
                                     Add children row
-                                  </ActionButton>
-                                  <ActionButton
-                                    disabled={!itemText}
-                                    onClick={() => {
-                                      editObjectWithId(items, elem.id);
-                                    }}
-                                  >
-                                    Edit current row
                                   </ActionButton>
                                   <ActionButton
                                     onClick={() => {
@@ -151,9 +195,10 @@ export default function DnDItem({ items, dropId, setCount }) {
                             {elem?.children?.length > 0 && (
                               <DnDItem
                                 items={elem?.children}
-                                onDragEnd={onDragEnd}
                                 dropId="childrens"
-                                setCount={setCount}
+                                register={register}
+                                setValue={setValue}
+                                control={control}
                               />
                             )}
                           </RowBlock>

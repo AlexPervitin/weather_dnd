@@ -44,7 +44,7 @@ export const CloseIcon = styled.div`
 export const ChildrenWrapper = styled.div`
   background: #424242;
   width: 100%;
-  height: calc(100vh - 40px);
+  min-height: calc(100vh - 40px);
 `;
 
 export const LogoutButton = styled.button`

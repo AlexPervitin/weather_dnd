@@ -7,6 +7,7 @@ export const WeatherWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 25px;
+  padding-bottom: 120px;
 `;
 
 export const WeatherTitle = styled.div`
@@ -21,6 +22,7 @@ export const WeatherChartsContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  margin-top: 30px;
 `;
 
 export const ErrorText = styled.div`
