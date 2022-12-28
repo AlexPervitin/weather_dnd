@@ -42,7 +42,7 @@ export default function DragAndDrop() {
           control={control}
         />
 
-        <ActionButton type="submit">Submit</ActionButton>
+        {items.length > 0 && <ActionButton type="submit">Submit</ActionButton>}
       </DnDWrapper>
     </form>
   );

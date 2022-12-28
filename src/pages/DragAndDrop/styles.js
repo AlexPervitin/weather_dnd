@@ -23,7 +23,7 @@ export const Tooltip = styled(motion.div)`
   width: 100%;
   max-width: 300px;
   right: -7px;
-  top: 28px;
+  top: 34px;
   flex-direction: column;
 `;
 
@@ -76,7 +76,7 @@ export const MenuItem = styled.div`
 `;
 
 export const ChangeRowTextInput = styled.input`
-  width: 20%;
+  max-width: 250px;
   height: 100%;
   min-height: 40px;
   border-radius: 8px;
@@ -84,15 +84,16 @@ export const ChangeRowTextInput = styled.input`
 `;
 
 export const ActionRowBlock = styled.div`
-  width: 100%;
   display: flex;
-  justify-content: space-around;
   height: 40px;
 `;
 
 export const ActionButton = styled.button`
   cursor: pointer;
   border-radius: 8px;
+  margin-right: 10px;
+  min-height: 40px;
+  min-width: 94px;
   &:disabled {
     background: #fff;
     opacity: 0.9;
